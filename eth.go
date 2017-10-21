@@ -461,27 +461,28 @@ func EthNewFilter(filterOptions *FilterOptions) (int64, error) {
 }
 
 //TODO: test
-func EthNewBlockFilter() (int64, error) {
+func EthNewBlockFilter() (string, error) {
 	resp, err := Call("eth_newBlockFilter", nil)
 	if err != nil {
-		return 0, err
+		return "0x0", err
 	}
 	if resp.Error != nil {
-		return 0, fmt.Errorf(resp.Error.Message)
+		return "0x0", fmt.Errorf(resp.Error.Message)
 	}
-	return ParseQuantity(resp.Result.(string))
+	fmt.Println(resp.Result)
+	return resp.Result.(string), err //ParseQuantity(resp.Result.(string))
 }
 
 //TODO: test
-func EthNewPendingTransactionFilter() (int64, error) {
+func EthNewPendingTransactionFilter() (string, error) {
 	resp, err := Call("eth_newPendingTransactionFilter", nil)
 	if err != nil {
-		return 0, err
+		return "0x0", err
 	}
 	if resp.Error != nil {
-		return 0, fmt.Errorf(resp.Error.Message)
+		return "0x0", fmt.Errorf(resp.Error.Message)
 	}
-	return ParseQuantity(resp.Result.(string))
+	return resp.Result.(string), err //ParseQuantity(resp.Result.(string))
 }
 
 //TODO: test
@@ -497,7 +498,7 @@ func EthUninstallFilter(filterID string) (bool, error) {
 }
 
 //TODO: test
-func EthGetFilterChanges(filterID string) (*LogObject, error) {
+func EthGetFilterChanges(filterID string) ([]interface{}, error) {
 	resp, err := Call("eth_getFilterChanges", []interface{}{filterID})
 	if err != nil {
 		return nil, err
@@ -505,12 +506,13 @@ func EthGetFilterChanges(filterID string) (*LogObject, error) {
 	if resp.Error != nil {
 		return nil, fmt.Errorf(resp.Error.Message)
 	}
-	answer := new(LogObject)
-	err = MapToObject(resp.Result, answer)
-	if err != nil {
-		return nil, err
-	}
-	return answer, nil
+	return resp.Result.([]interface{}), nil
+	//answer := new(LogObject)
+	//err = MapToObject(resp.Result, answer)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//return answer, nil
 }
 
 //TODO: test

@@ -7,7 +7,7 @@ import (
 //https://github.com/ethereum/go-ethereum/wiki/Management-APIs#txpool
 
 //TODO: finish
-func TxPoolContent() (interface{}, error) {
+func TxPoolContent() ([]byte, error) {
 	resp, err := Call("txpool_content", nil)
 	if err != nil {
 		return nil, err
@@ -15,7 +15,8 @@ func TxPoolContent() (interface{}, error) {
 	if resp.Error != nil {
 		return nil, fmt.Errorf(resp.Error.Message)
 	}
-	return resp.Result, nil
+	r, _ := resp.JSONByte()
+	return r, nil
 }
 
 //TODO: finish
